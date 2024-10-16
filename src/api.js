@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
+const GEOCODING_URL = 'http://api.openweathermap.org/geo/1.0/direct';
 
 /**
  * Fetch weather data for a specific city.
@@ -17,3 +18,18 @@ export const fetchWeather = async (city) => {
     throw error;
   }
 };
+
+/**
+ * Fetch city suggestions based on search query.
+ * @param {string} query - The city name query.
+ * @returns {Promise<Array>} - A promise that resolves to a list of city suggestions.
+ */
+export const fetchCitySuggestions = async (query) => {
+  try {
+    const response = await axios.get(`${GEOCODING_URL}?q=${query}&limit=5&appid=${API_KEY}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching city suggestions:', error);
+    throw error;
+  }
+}
