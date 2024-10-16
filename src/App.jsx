@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { fetchWeather } from './api';
+import Weather from './Weather';
 
 const App = () => {
   const [city, setCity] = useState('');
   const [weatherData, setWeatherData] = useState(null);
   const [error, setError] = useState(null);
 
-  // Function to handle the search
   const handleSearch = async () => {
     setError(null);
     setWeatherData(null);
@@ -34,19 +34,9 @@ const App = () => {
       />
       <button onClick={handleSearch}>Search</button>
 
-      {/* Display error message if any */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {/* Display weather data if available */}
-      {weatherData && (
-        <div>
-          <h2>{weatherData.name}</h2>
-          <p>Temperature: {weatherData.main.temp} °C</p>
-          <p>Weather: {weatherData.weather[0].description}</p>
-          <p>Humidity: {weatherData.main.humidity}%</p>
-          <p>Wind Speed: {weatherData.wind.speed} m/s</p>
-        </div>
-      )}
+      <Weather weatherData={weatherData} />
     </div>
   );
 };
