@@ -3,10 +3,13 @@ import { fetchWeather, fetchCitySuggestions, fetchWeatherByCoordinates } from '.
 import Weather from './Weather';
 import debounce from 'lodash/debounce';
 
+const RECENT_SEARCHES_KEY = 'recentSearches';
+
 const App = () => {
   const [city, setCity] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [weatherData, setWeatherData] = useState(null);
+  const [recentSearches, setRecentSearches] = useState([]);
   const [error, setError] = useState(null);
 
   const fetchWeatherByLocation = async (lat, lon) => {
@@ -47,7 +50,22 @@ const App = () => {
 
   useEffect(() => {
     getLocation();
+
+    const storedSearches = JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY)) || [];
+    setRecentSearches(storedSearches);
   }, []);
+
+  const updateRecentSearches = (city, data) => {
+    const updatedSearches = recentSearches.filter((search) => search.city !== city);
+    updatedSearches.unshift({ city, data });
+
+    if (updatedSearches.length > 3) {
+      updatedSearches.pop();
+    }
+
+    setRecentSearches(updatedSearches);
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updatedSearches));
+  };
 
   const debouncedFetchSuggestions = debounce(async (query) => {
     if (query.length > 2) {
@@ -85,6 +103,7 @@ const App = () => {
     try {
       const data = await fetchWeather(city);
       setWeatherData(data);
+      updateRecentSearches(city, data);
     } catch (err) {
       setError('City not found or API error.');
     }
@@ -116,6 +135,21 @@ const App = () => {
           ))}
         </ul>
       )}
+
+      <div>
+        <h2>Recent Searches</h2>
+        {recentSearches.length === 0 ? (
+          <p>No recent searches.</p>
+        ) : (
+          <ul>
+            {recentSearches.map((search, index) => (
+              <li key={index}>
+                {search.city}: {search.data.main.temp} °C, {search.data.weather[0].description}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
