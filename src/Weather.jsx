@@ -3,15 +3,15 @@ import React from 'react';
 const Weather = ({ weatherData }) => {
   if (!weatherData) return null;
 
-  const { name, main, weather, wind } = weatherData;
+  const { name, main, weather } = weatherData;
+  const iconUrl = `http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`;
 
   return (
-    <div>
+    <div className="weather">
+      <img src={iconUrl} alt={weather[0].description} className="weather-icon" />
       <h2>{name}</h2>
-      <p>Temperature: {main.temp} °C</p>
-      <p>Weather: {weather[0].description}</p>
-      <p>Humidity: {main.humidity}%</p>
-      <p>Wind Speed: {wind.speed} m/s</p>
+      <p>{main.temp} °C</p>
+      <p>{weather[0].description}</p>
     </div>
   );
 };

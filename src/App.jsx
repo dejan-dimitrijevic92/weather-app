@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchWeather, fetchCitySuggestions, fetchWeatherByCoordinates } from './api';
 import Weather from './Weather';
 import debounce from 'lodash/debounce';
+import './styles.css';
 
 const RECENT_SEARCHES_KEY = 'recentSearches';
 
@@ -11,15 +12,40 @@ const App = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [recentSearches, setRecentSearches] = useState([]);
   const [error, setError] = useState(null);
+  const [background, setBackground] = useState('');
 
   const fetchWeatherByLocation = async (lat, lon) => {
     try {
       const data = await fetchWeatherByCoordinates(lat, lon);
       setWeatherData(data);
+      updateBackground(data);
     } catch (err) {
       setError('Unable to fetch weather for your location.');
     }
   };
+
+  const updateBackground = (data) => {
+    const { timezone } = data;
+    const localTime = new Date(Date.now() + timezone * 1000);
+    const hour = localTime.getHours();
+  
+    const condition = data.weather[0].main.toLowerCase();
+    let gradient = '';
+
+    if (condition.includes('clear')) {
+      gradient = hour >= 18 ? 'linear-gradient(to bottom, #2c3e50, #34495e)' : 'linear-gradient(to bottom, #2980b9, #6dd5ed)';
+    } else if (condition.includes('cloud')) {
+      gradient = hour >= 18 ? 'linear-gradient(to bottom, #34495e, #2c3e50)' : 'linear-gradient(to bottom, #bdc3c7, #2c3e50)';
+    } else if (condition.includes('rain')) {
+      gradient = 'linear-gradient(to bottom, #2c3e50, #bdc3c7)';
+    } else if (condition.includes('snow')) {
+      gradient = 'linear-gradient(to bottom, #ecf0f1, #bdc3c7)';
+    } else {
+      gradient = 'linear-gradient(to bottom, #3498db, #ecf0f1)'; // Default gradient
+    }
+  
+    setBackground(gradient);
+  };  
 
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -43,6 +69,7 @@ const App = () => {
     try {
       const data = await fetchWeather('New York');
       setWeatherData(data);
+      updateBackground(data);
     } catch (err) {
       setError('Unable to fetch weather data for the fallback city.');
     }
@@ -50,7 +77,6 @@ const App = () => {
 
   useEffect(() => {
     getLocation();
-
     const storedSearches = JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY)) || [];
     setRecentSearches(storedSearches);
   }, []);
@@ -85,12 +111,12 @@ const App = () => {
     setCity(value);
     setSuggestions([]);
     debouncedFetchSuggestions(value);
-  }
+  };
 
   const handleCitySelect = (suggestion) => {
     setCity(`${suggestion.name}, ${suggestion.country}`);
-    setSuggestions([])
-  }
+    setSuggestions([]);
+  };
 
   const handleSearch = async () => {
     setError(null);
@@ -104,6 +130,7 @@ const App = () => {
       const data = await fetchWeather(city);
       setWeatherData(data);
       updateRecentSearches(city, data);
+      updateBackground(data);
     } catch (err) {
       setError('City not found or API error.');
     }
@@ -116,27 +143,31 @@ const App = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Weather App</h1>
+    <div className="container" style={{ background: background, transition: 'background 0.5s ease' }}>
       <input
         type="text"
         value={city}
         onChange={handleCityChange}
+        className="search-input"
         placeholder="Enter city name"
       />
-      <button onClick={handleSearch}>Search</button>
+      <button onClick={handleSearch} className="search-button">Search</button>
 
       {suggestions.length > 0 && (
-        <ul style={{ border: '1px solid #ddd', listStyle: 'none', padding: '0' }}>
+        <ul className="suggestions-list">
           {suggestions.map((suggestion, index) => (
-            <li key={index} onClick={() => handleCitySelect(suggestion)}>
+            <li key={index} className="suggestion-item" onClick={() => handleCitySelect(suggestion)}>
               {suggestion.name}, {suggestion.country}
             </li>
           ))}
         </ul>
       )}
 
-      <div>
+      {error && <p className="error-message">{error}</p>}
+
+      {weatherData && <Weather weatherData={weatherData} />}
+
+      <div className="recent-searches">
         <h2>Recent Searches</h2>
         {recentSearches.length === 0 ? (
           <p>No recent searches.</p>
@@ -150,10 +181,6 @@ const App = () => {
           </ul>
         )}
       </div>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      <Weather weatherData={weatherData} />
     </div>
   );
 };
