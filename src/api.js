@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
-const GEOCODING_URL = 'http://api.openweathermap.org/geo/1.0/direct';
+const GEOCODING_URL = 'https://api.openweathermap.org/geo/1.0/direct';
 
 /**
  * Fetch weather data for a specific city.

@@ -4,7 +4,7 @@ const Weather = ({ weatherData }) => {
   if (!weatherData) return null;
 
   const { name, main, weather } = weatherData;
-  const iconUrl = `http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`;
+  const iconUrl = `https://openweathermap.org/img/wn/${weather[0].icon}@2x.png`;
 
   return (
     <div className="weather">
