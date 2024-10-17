@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Arial', sans-serif;
-  background-color: #e0f7fa;
+  background-color: #bfd1d3;
 }
 
 .container {
@@ -19,14 +19,21 @@ h1 {
   color: white;
 }
 
+/* Input and Button Container */
+.input-container {
+  display: flex;
+  margin-bottom: 20px;
+}
+
 input[type="text"] {
   padding: 10px;
   font-size: 1.2rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 300px;
   border: 2px solid #ddd;
   border-radius: 5px;
-  margin-bottom: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  margin-right: 10px;
 }
 
 button {
@@ -38,10 +45,30 @@ button {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+  background-color: rgba(3, 169, 244, 0.8);
 }
 
 button:hover {
-  background-color: #0288d1;
+  background-color: rgba(2, 136, 209, 0.9);
+}
+
+/* Suggestions */
+.suggestions-list {
+  list-style-type: none;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  position: absolute;
+  margin-top: 0;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: rgba(200, 200, 200, 0.5);
 }
 
 /* Weather section */

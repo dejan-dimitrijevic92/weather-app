@@ -28,7 +28,6 @@ const App = () => {
     const { timezone } = data;
     const localTime = new Date(Date.now() + timezone * 1000);
     const hour = localTime.getHours();
-  
     const condition = data.weather[0].main.toLowerCase();
     let gradient = '';
 
@@ -41,11 +40,11 @@ const App = () => {
     } else if (condition.includes('snow')) {
       gradient = 'linear-gradient(to bottom, #ecf0f1, #bdc3c7)';
     } else {
-      gradient = 'linear-gradient(to bottom, #3498db, #ecf0f1)'; // Default gradient
+      gradient = 'linear-gradient(to bottom, #3498db, #ecf0f1)';
     }
-  
+
     setBackground(gradient);
-  };  
+  };
 
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -116,23 +115,32 @@ const App = () => {
   const handleCitySelect = (suggestion) => {
     setCity(`${suggestion.name}, ${suggestion.country}`);
     setSuggestions([]);
+    handleSearch(`${suggestion.name}, ${suggestion.country}`);
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (searchCity) => {
     setError(null);
     setWeatherData(null);
-    if (!city) {
+    const searchCityValue = searchCity || city;
+
+    if (!searchCityValue) {
       setError('Please enter a city name.');
       return;
     }
 
     try {
-      const data = await fetchWeather(city);
+      const data = await fetchWeather(searchCityValue);
       setWeatherData(data);
-      updateRecentSearches(city, data);
+      updateRecentSearches(searchCityValue, data);
       updateBackground(data);
     } catch (err) {
       setError('City not found or API error.');
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -144,14 +152,16 @@ const App = () => {
 
   return (
     <div className="container" style={{ background: background, transition: 'background 0.5s ease' }}>
-      <input
-        type="text"
-        value={city}
-        onChange={handleCityChange}
-        className="search-input"
-        placeholder="Enter city name"
-      />
-      <button onClick={handleSearch} className="search-button">Search</button>
+      <div className="input-container">
+        <input
+          type="text"
+          value={city}
+          onChange={handleCityChange}
+          onKeyUp={handleKeyPress}
+          className="search-input"
+          placeholder="Enter city name"
+        />
+      </div>
 
       {suggestions.length > 0 && (
         <ul className="suggestions-list">
