@@ -1,9 +1,10 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
 
-module.exports = (_, argv) => {
-  const isDevelopment = argv.mode === 'development';
+module.exports = (env, argv) => {
+  const isDevelopment = argv.mode === 'development';  // Check if it's development mode
 
   return {
     entry: './src/index.js',
@@ -32,7 +33,11 @@ module.exports = (_, argv) => {
         template: './src/index.html',
         filename: 'index.html',
       }),
-      ...(isDevelopment ? [new Dotenv()] : []),
+      // Use Dotenv only in development
+      ...(isDevelopment ? [new Dotenv()] : [new webpack.DefinePlugin({
+          'process.env.REACT_APP_WEATHER_API_KEY': JSON.stringify(process.env.REACT_APP_WEATHER_API_KEY),
+        }),
+      ]),
     ],
     devServer: {
       static: {
