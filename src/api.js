@@ -20,6 +20,22 @@ export const fetchWeather = async (city) => {
 };
 
 /**
+ * Fetch weather data based on geographic coordinates.
+ * @param {number} lat - Latitude.
+ * @param {number} lon - Longitude.
+ * @returns {Promise<Object>} - A promise that resolves to the weather data.
+ */
+export const fetchWeatherByCoordinates = async (lat, lon) => {
+  try {
+    const response = await axios.get(`${BASE_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching weather by coordinates:', error);
+    throw error;
+  }
+};
+
+/**
  * Fetch city suggestions based on search query.
  * @param {string} query - The city name query.
  * @returns {Promise<Array>} - A promise that resolves to a list of city suggestions.

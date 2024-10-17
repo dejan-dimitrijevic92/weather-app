@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchWeather, fetchCitySuggestions } from './api';
+import { fetchWeather, fetchCitySuggestions, fetchWeatherByCoordinates } from './api';
 import Weather from './Weather';
 import debounce from 'lodash/debounce';
 
@@ -8,6 +8,46 @@ const App = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [weatherData, setWeatherData] = useState(null);
   const [error, setError] = useState(null);
+
+  const fetchWeatherByLocation = async (lat, lon) => {
+    try {
+      const data = await fetchWeatherByCoordinates(lat, lon);
+      setWeatherData(data);
+    } catch (err) {
+      setError('Unable to fetch weather for your location.');
+    }
+  };
+
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          fetchWeatherByLocation(latitude, longitude);
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          fetchWeatherFallback();
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+      fetchWeatherFallback();
+    }
+  };
+
+  const fetchWeatherFallback = async () => {
+    try {
+      const data = await fetchWeather('New York');
+      setWeatherData(data);
+    } catch (err) {
+      setError('Unable to fetch weather data for the fallback city.');
+    }
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, []);
 
   const debouncedFetchSuggestions = debounce(async (query) => {
     if (query.length > 2) {
