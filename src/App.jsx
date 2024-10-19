@@ -26,24 +26,26 @@ const App = () => {
 
   const updateBackground = (data) => {
     const { timezone } = data;
-    const localTime = new Date(Date.now() + timezone * 1000);
+    const utcTime = Date.now() + new Date().getTimezoneOffset() * 60000;
+    const localTime = new Date(utcTime + timezone * 1000);
     const hour = localTime.getHours();
+  
     const condition = data.weather[0].main.toLowerCase();
-    let gradient = '';
+    let backgroundClass = '';
 
     if (condition.includes('clear')) {
-      gradient = hour >= 18 ? 'linear-gradient(to bottom, #2c3e50, #34495e)' : 'linear-gradient(to bottom, #2980b9, #6dd5ed)';
+      backgroundClass = hour >= 18 || hour <= 5 ? 'night-clear' : 'day-clear';
     } else if (condition.includes('cloud')) {
-      gradient = hour >= 18 ? 'linear-gradient(to bottom, #34495e, #2c3e50)' : 'linear-gradient(to bottom, #bdc3c7, #2c3e50)';
+      backgroundClass = hour >= 18 || hour <= 5 ? 'night-cloudy' : 'day-cloudy';
     } else if (condition.includes('rain')) {
-      gradient = 'linear-gradient(to bottom, #2c3e50, #bdc3c7)';
+      backgroundClass = 'rainy';
     } else if (condition.includes('snow')) {
-      gradient = 'linear-gradient(to bottom, #ecf0f1, #bdc3c7)';
+      backgroundClass = 'snowy';
     } else {
-      gradient = 'linear-gradient(to bottom, #3498db, #ecf0f1)';
+      backgroundClass = 'default';
     }
-
-    setBackground(gradient);
+  
+    setBackground(backgroundClass);
   };
 
   const getLocation = () => {
@@ -151,7 +153,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="container" style={{ background: background, transition: 'background 0.5s ease' }}>
+    <div className={`container ${background}`} style={{ transition: 'background 0.5s ease' }}>
       <div className="input-container">
         <input
           type="text"

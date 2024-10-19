@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = (env, argv) => {
-  const isDevelopment = argv.mode === 'development';  // Check if it's development mode
+  const isDevelopment = argv.mode === 'development';
 
   return {
     entry: './src/index.js',

@@ -152,3 +152,29 @@ button:hover {
     font-size: 1.5rem;
   }
 }
+
+.day-clear {
+  background: linear-gradient(to bottom, #2980b9, #6dd5ed);
+}
+.night-clear {
+  background: linear-gradient(to bottom, #2c3e50, #34495e);
+}
+
+.day-cloudy {
+  background: linear-gradient(to bottom, #bdc3c7, #2c3e50);
+}
+.night-cloudy {
+  background: linear-gradient(to bottom, #34495e, #2c3e50);
+}
+
+.rainy {
+  background: linear-gradient(to bottom, #2c3e50, #bdc3c7);
+}
+
+.snowy {
+  background: linear-gradient(to bottom, #ecf0f1, #bdc3c7);
+}
+
+.default {
+  background: linear-gradient(to bottom, #3498db, #ecf0f1);
+}
