@@ -1,18 +1,15 @@
 import React from 'react';
+import WeatherIcon from './WeatherIcon'
+import { roundToNearestHalf } from '../utils/helper';
 
 const CurrentWeather = ({ weatherData }) => {
   if (!weatherData) return null;
 
   const { name, main, weather } = weatherData;
-  const iconUrl = `https://openweathermap.org/img/wn/${weather[0].icon}@2x.png`;
-
-  const roundToNearestHalf = (number) => {
-    return Math.round(number * 2) / 2;
-  };
 
   return (
     <div className="weather-card">
-      <img src={iconUrl} alt={weather[0].description} className="weather-icon" />
+      <WeatherIcon icon={weather[0].icon} description={weather[0].description} />
       <h2 className="city-name">{name}</h2>
       <p className="temperature">{roundToNearestHalf(main.temp)}°</p>
       <p className="description">{weather[0].description}</p>
