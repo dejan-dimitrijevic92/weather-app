@@ -10,7 +10,7 @@ const RecentSearches = ({ recentSearches, handleSelect }) => {
           <p>No recent searches.</p>
         ) : (
           recentSearches.slice(0, 3).map((search, index) => (
-            <RecentSearchItem key={index} search={search} onClick={() => handleSelect(search.city)} />
+            <RecentSearchItem key={index} search={search} onClick={() => handleSelect(search)} />
           ))
         )}
       </div>

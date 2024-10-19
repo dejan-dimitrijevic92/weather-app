@@ -223,8 +223,13 @@ body {
 :is(.night-clear, .day-cloudy, .night-cloudy) .recent-city-name,
 :is(.night-clear, .day-cloudy, .night-cloudy) .recent-temp,
 :is(.night-clear, .day-cloudy, .night-cloudy) .recent-description,
-:is(.night-clear, .day-cloudy, .night-cloudy) .recent-searches-label {
-    color: #cdcdcd;
+:is(.night-clear, .day-cloudy, .night-cloudy) .recent-searches-label,
+:is(.night-clear, .day-cloudy, .night-cloudy) .city-name,
+:is(.night-clear, .day-cloudy, .night-cloudy) .temperature,
+:is(.night-clear, .day-cloudy, .night-cloudy) .description,
+:is(.night-clear, .day-cloudy, .night-cloudy) .temp-range,
+:is(.night-clear, .day-cloudy, .night-cloudy) .search-input {
+    color: white;
 }
 
 @media (max-width: 768px) {

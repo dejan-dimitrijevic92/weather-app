@@ -147,10 +147,17 @@ const App = () => {
     debouncedFetchSuggestions(value);
   };
 
-  const handleCitySelect = (suggestion) => {
-    setCity(`${suggestion.name}, ${suggestion.country}`);
-    setSuggestions([]);
-    handleSearch(`${suggestion.name}, ${suggestion.country}`);
+  const handleCitySelect = async (suggestion) => {
+    try {
+      const data = await fetchWeatherByCoordinates(suggestion.lat, suggestion.lon);
+      setWeatherData(data);
+      setCity(`${suggestion.name}, ${suggestion.country}`);
+      setSuggestions([]);
+      updateRecentSearches(`${suggestion.name}, ${suggestion.country}`, data);
+      updateBackground(data);
+    } catch (err) {
+      setError('Unable to fetch weather for the selected city.');
+    }
   };
 
   const handleSearch = async (searchCity) => {
@@ -181,8 +188,8 @@ const App = () => {
   };
 
   const handleRecentItemSelect = (selectedCity) => {
-    setCity(selectedCity);
-    handleSearch(selectedCity);
+    fetchWeatherByLocation(selectedCity.data.coord.lat, selectedCity.data.coord.lon);
+    setCity(selectedCity.city);
   };
   
 
