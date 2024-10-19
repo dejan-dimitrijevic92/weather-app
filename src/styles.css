@@ -295,3 +295,10 @@ body {
 .default {
   background: linear-gradient(to bottom, #3498db, #ecf0f1);
 }
+
+@media (hover: none) {
+  .recent-search-item:hover {
+    transform: none;
+    background-color: transparent;
+  }
+}
