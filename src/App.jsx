@@ -95,7 +95,24 @@ const App = () => {
   useEffect(() => {
     getLocation();
     const storedSearches = JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY)) || [];
-    setRecentSearches(storedSearches);
+
+    const fetchLatestWeatherForRecentSearches = async () => {
+      const updatedSearches = await Promise.all(
+        storedSearches.map(async (search) => {
+          try {
+            const latestWeatherData = await fetchWeather(search.city);
+            return { city: search.city, data: latestWeatherData };
+          } catch (error) {
+            console.error(`Error fetching weather for ${search.city}:`, error);
+            return search;
+          }
+        })
+      );
+      setRecentSearches(updatedSearches);
+      localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updatedSearches));
+    };
+
+    fetchLatestWeatherForRecentSearches();
   }, []);
 
   const updateRecentSearches = (city, data) => {
