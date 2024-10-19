@@ -14,7 +14,6 @@ const App = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [recentSearches, setRecentSearches] = useState([]);
   const [error, setError] = useState(null);
-  const [background, setBackground] = useState('');
   const wrapperRef = useRef(null);
 
   const fetchWeatherByLocation = async (lat, lon) => {
@@ -35,7 +34,7 @@ const App = () => {
   
     const condition = data.weather[0].main.toLowerCase();
     let backgroundClass = '';
-
+  
     if (condition.includes('clear')) {
       backgroundClass = hour >= 18 || hour <= 5 ? 'night-clear' : 'day-clear';
     } else if (condition.includes('cloud')) {
@@ -48,7 +47,8 @@ const App = () => {
       backgroundClass = 'default';
     }
   
-    setBackground(backgroundClass);
+    document.body.classList.remove('night-clear', 'day-clear', 'night-cloudy', 'day-cloudy', 'rainy', 'snowy', 'default');
+    document.body.classList.add(backgroundClass);
   };
 
   const getLocation = () => {
@@ -193,7 +193,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className={`container ${background}`} style={{ transition: 'background 0.5s ease' }}>
+    <div className="container">
       <div ref={wrapperRef} className="input-wrapper">
         <div className="search-container">
           <div className="input-container">
