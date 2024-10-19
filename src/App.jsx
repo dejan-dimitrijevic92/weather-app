@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchWeather, fetchCitySuggestions, fetchWeatherByCoordinates } from './api';
-import Weather from './Weather';
+import CurrentWeather from './CurrentWeather';
 import debounce from 'lodash/debounce';
 import './styles.css';
 
@@ -177,7 +177,7 @@ const App = () => {
 
       {error && <p className="error-message">{error}</p>}
 
-      {weatherData && <Weather weatherData={weatherData} />}
+      {weatherData && <CurrentWeather weatherData={weatherData} />}
 
       <div className="recent-searches">
         <h2>Recent Searches</h2>

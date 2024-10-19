@@ -72,32 +72,58 @@ button:hover {
 }
 
 /* Weather section */
-.weather {
+.weather-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background-color: rgba(181, 176, 176, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
   padding: 20px;
-  margin-top: 20px;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  width: 200px;
 }
 
 .weather-icon {
-  font-size: 5rem;
-  margin: 20px 0;
+  width: 100px; /* Adjust the size of the icon */
+  height: auto;
+  margin-bottom: 10px;
 }
 
-.weather h2 {
-  font-size: 2.5rem;
-  color: white;
+.city-name {
+  font-size: 1.2rem;
+  color: #666; /* Smaller size and less emphasis */
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
-.weather p {
-  font-size: 1.5rem;
-  margin: 10px 0;
-  color: white;
+.temperature {
+  font-size: 2.5rem; /* Larger font size for the temperature */
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+.description {
+  font-size: 1.2rem;
+  color: #444;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.temp-range {
+  font-size: 1rem;
+  color: #666;
+  display: flex;
+  justify-content: space-between;
+  width: 120px;
+}
+
+.temp-high,
+.temp-low {
+  font-weight: bold;
 }
 
 /* Recent Searches */
@@ -126,7 +152,6 @@ button:hover {
   font-weight: bold;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   h1 {
     font-size: 2.5rem;
@@ -150,6 +175,11 @@ button:hover {
 
   .recent-searches h2 {
     font-size: 1.5rem;
+  }
+
+  .weather-card {
+    width: 90%;
+    max-width: 200px;
   }
 }
 
