@@ -33,7 +33,6 @@ input[type="text"] {
   border: 2px solid #ddd;
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 0.8);
-  margin-right: 10px;
 }
 
 button {
@@ -86,20 +85,20 @@ button:hover {
 }
 
 .weather-icon {
-  width: 100px; /* Adjust the size of the icon */
+  width: 100px;
   height: auto;
   margin-bottom: 10px;
 }
 
 .city-name {
   font-size: 1.2rem;
-  color: #666; /* Smaller size and less emphasis */
+  color: #666;
   margin-bottom: 5px;
   margin-top: 5px;
 }
 
 .temperature {
-  font-size: 2.5rem; /* Larger font size for the temperature */
+  font-size: 2.5rem;
   font-weight: bold;
   color: #333;
   margin-bottom: 10px;
@@ -111,6 +110,7 @@ button:hover {
   color: #444;
   margin-bottom: 5px;
   margin-top: 5px;
+  text-transform: capitalize;
 }
 
 .temp-range {
@@ -129,27 +129,74 @@ button:hover {
 /* Recent Searches */
 .recent-searches {
   margin-top: 40px;
+  width: 80%;
 }
 
-.recent-searches h2 {
-  font-size: 2rem;
+.recent-searches-label {
+  font-size: 0.8rem;
+  color: white;
   margin-bottom: 10px;
-  color: white;
+  text-align: center;
 }
 
-.recent-searches ul {
-  list-style-type: none;
-  padding: 0;
+.recent-searches-grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.recent-searches li {
-  font-size: 1.2rem;
-  margin: 5px 0;
-  color: white;
+.recent-search-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 28%;
 }
 
-.recent-searches li span {
+.recent-weather-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.recent-search-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-search-info p {
+  margin-bottom: 2px;
+  margin-top: 2px;
+}
+
+.recent-city-name {
+  font-size: 0.9rem;
   font-weight: bold;
+  color: #333;
+}
+
+.recent-temp {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.recent-description {
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: capitalize;
+}
+
+:is(.night-clear, .day-cloudy, .night-cloudy) .recent-city-name,
+:is(.night-clear, .day-cloudy, .night-cloudy) .recent-temp,
+:is(.night-clear, .day-cloudy, .night-cloudy) .recent-description,
+:is(.night-clear, .day-cloudy, .night-cloudy) .recent-searches-label {
+    color: #cdcdcd;
+}
+
+@media (max-width: 1280px) {
+
 }
 
 @media (max-width: 768px) {
@@ -180,6 +227,16 @@ button:hover {
   .weather-card {
     width: 90%;
     max-width: 200px;
+  }
+
+  .recent-searches {
+    margin-top: 20px;
+    width: 90%;
+  }
+
+  .recent-search-item {
+    width: 90%;
+    margin-bottom: 10px;
   }
 }
 

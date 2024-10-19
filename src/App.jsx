@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchWeather, fetchCitySuggestions, fetchWeatherByCoordinates } from './api';
-import CurrentWeather from './CurrentWeather';
+import CurrentWeather from './components/CurrentWeather';
+import RecentSearches from './components/RecentSearches';
 import debounce from 'lodash/debounce';
 import './styles.css';
 
@@ -146,6 +147,12 @@ const App = () => {
     }
   };
 
+  const handleRecentItemSelect = (selectedCity) => {
+    setCity(selectedCity);
+    handleSearch(selectedCity);
+  };
+  
+
   useEffect(() => {
     return () => {
       debouncedFetchSuggestions.cancel();
@@ -179,20 +186,7 @@ const App = () => {
 
       {weatherData && <CurrentWeather weatherData={weatherData} />}
 
-      <div className="recent-searches">
-        <h2>Recent Searches</h2>
-        {recentSearches.length === 0 ? (
-          <p>No recent searches.</p>
-        ) : (
-          <ul>
-            {recentSearches.map((search, index) => (
-              <li key={index}>
-                {search.city}: {search.data.main.temp} °C, {search.data.weather[0].description}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <RecentSearches recentSearches={recentSearches} handleSelect={handleRecentItemSelect} />
     </div>
   );
 };
