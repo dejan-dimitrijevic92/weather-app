@@ -14,51 +14,67 @@ body {
   padding: 20px;
 }
 
-h1 {
-  font-size: 3rem;
-  color: white;
+.input-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
 }
 
-/* Input and Button Container */
+.search-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .input-container {
   display: flex;
-  margin-bottom: 20px;
+  align-items: center;
+  width: 400px;
+  max-width: 100%;
 }
 
-input[type="text"] {
+.search-input {
   padding: 10px;
-  font-size: 1.2rem;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-right: none;
+  border-radius: 5px 0 0 5px;
   width: 100%;
-  max-width: 300px;
-  border: 2px solid #ddd;
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.3);
+  box-sizing: border-box;
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 1.2rem;
-  background-color: #03a9f4;
+.search-button {
+  padding: 10px 15px;
+  font-size: 0.9rem;
+  background-color: #8ab9ce;
   color: white;
-  border: none;
-  border-radius: 5px;
+  border: 1px solid #ddd;
+  border-radius: 0 5px 5px 0;
+  border-left: none;
   cursor: pointer;
   transition: background-color 0.3s;
-  background-color: rgba(3, 169, 244, 0.8);
 }
 
-button:hover {
-  background-color: rgba(2, 136, 209, 0.9);
+.search-button:hover {
+  background-color: #0288d1;
 }
 
 /* Suggestions */
 .suggestions-list {
   list-style-type: none;
   padding: 0;
+  margin: 5px 0 0 0;
+  width: 100%;
   background-color: rgba(255, 255, 255, 0.9);
   border: 1px solid #ddd;
+  border-radius: 0 0 5px 5px;
   position: absolute;
-  margin-top: 0;
+  top: 100%;
+  left: 0;
+  z-index: 10;
 }
 
 .suggestion-item {
@@ -80,7 +96,7 @@ button:hover {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  margin-top: 20px;
+  margin-top: 40px;
   width: 200px;
 }
 

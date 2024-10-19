@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { fetchWeather, fetchCitySuggestions, fetchWeatherByCoordinates } from './api';
 import CurrentWeather from './components/CurrentWeather';
 import RecentSearches from './components/RecentSearches';
 import debounce from 'lodash/debounce';
 import './styles.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const RECENT_SEARCHES_KEY = 'recentSearches';
 
@@ -14,6 +15,7 @@ const App = () => {
   const [recentSearches, setRecentSearches] = useState([]);
   const [error, setError] = useState(null);
   const [background, setBackground] = useState('');
+  const wrapperRef = useRef(null);
 
   const fetchWeatherByLocation = async (lat, lon) => {
     try {
@@ -78,6 +80,19 @@ const App = () => {
   };
 
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setSuggestions([]);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [wrapperRef]);
+
+  useEffect(() => {
     getLocation();
     const storedSearches = JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY)) || [];
     setRecentSearches(storedSearches);
@@ -124,6 +139,7 @@ const App = () => {
   const handleSearch = async (searchCity) => {
     setError(null);
     setWeatherData(null);
+    setSuggestions([]);
     const searchCityValue = searchCity || city;
 
     if (!searchCityValue) {
@@ -161,26 +177,34 @@ const App = () => {
 
   return (
     <div className={`container ${background}`} style={{ transition: 'background 0.5s ease' }}>
-      <div className="input-container">
-        <input
-          type="text"
-          value={city}
-          onChange={handleCityChange}
-          onKeyUp={handleKeyPress}
-          className="search-input"
-          placeholder="Enter city name"
-        />
+      <div ref={wrapperRef} className="input-wrapper">
+        <div className="search-container">
+          <div className="input-container">
+            <input
+              type="text"
+              value={city}
+              onChange={handleCityChange}
+              onKeyUp={handleKeyPress}
+              className="search-input"
+              placeholder="Enter city name"
+            />
+            <button onClick={() => handleSearch()} className="search-button">
+              <i className="fas fa-search"></i>
+            </button>
+          </div>
+
+          {suggestions.length > 0 && (
+            <ul className="suggestions-list">
+              {suggestions.map((suggestion, index) => (
+                <li key={index} className="suggestion-item" onClick={() => handleCitySelect(suggestion)}>
+                  {suggestion.name}, {suggestion.country}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
 
-      {suggestions.length > 0 && (
-        <ul className="suggestions-list">
-          {suggestions.map((suggestion, index) => (
-            <li key={index} className="suggestion-item" onClick={() => handleCitySelect(suggestion)}>
-              {suggestion.name}, {suggestion.country}
-            </li>
-          ))}
-        </ul>
-      )}
 
       {error && <p className="error-message">{error}</p>}
 
