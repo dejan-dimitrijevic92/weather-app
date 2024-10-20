@@ -19,6 +19,7 @@ const App = () => {
   const wrapperRef = useRef(null);
 
   const fetchWeatherByLocation = async (lat, lon) => {
+    setError(null);
     try {
       setLoading(true);
       const data = await fetchWeatherByCoordinates(lat, lon);
@@ -158,6 +159,7 @@ const App = () => {
 
   const handleCitySelect = async (suggestion) => {
     try {
+      setError(null);
       setLoading(true); 
       const data = await fetchWeatherByCoordinates(suggestion.lat, suggestion.lon);
       setWeatherData(data);
