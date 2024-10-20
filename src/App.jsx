@@ -15,6 +15,7 @@ const App = () => {
   const [recentSearches, setRecentSearches] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const wrapperRef = useRef(null);
 
   const fetchWeatherByLocation = async (lat, lon) => {
@@ -107,7 +108,7 @@ const App = () => {
       const updatedSearches = await Promise.all(
         storedSearches.map(async (search) => {
           try {
-            const latestWeatherData = await fetchWeather(search.city);
+            const latestWeatherData = await fetchWeatherByCoordinates(search.data.coord.lat, search.data.coord.lon);
             return { city: search.city, data: latestWeatherData };
           } catch (error) {
             console.error(`Error fetching weather for ${search.city}:`, error);
@@ -139,6 +140,7 @@ const App = () => {
       try {
         const data = await fetchCitySuggestions(query);
         setSuggestions(data);
+        setHighlightedIndex(-1); 
       } catch (err) {
         setError('Error fetching city suggestions.');
       }
@@ -196,7 +198,21 @@ const App = () => {
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      handleSearch();
+      if (highlightedIndex >= 0 && suggestions[highlightedIndex]) {
+        handleCitySelect(suggestions[highlightedIndex]);
+      } else {
+        handleSearch();
+      }
+    } else if (e.key === 'ArrowDown') {
+      setHighlightedIndex((prevIndex) =>
+        prevIndex < suggestions.length - 1 ? prevIndex + 1 : 0
+      );
+    } else if (e.key === 'ArrowUp') {
+      setHighlightedIndex((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : suggestions.length - 1
+      );
+    } else if (e.key === 'Escape') {
+      setSuggestions([]);
     }
   };
 
@@ -221,19 +237,35 @@ const App = () => {
               type="text"
               value={city}
               onChange={handleCityChange}
-              onKeyUp={handleKeyPress}
+              onKeyDown={handleKeyPress}
               className="search-input"
               placeholder="Enter city name"
+              aria-label="Search for a city"
+              role="combobox"
+              aria-expanded={suggestions.length > 0}
+              aria-autocomplete="list"
+              aria-controls="suggestions-list"
             />
-            <button onClick={() => handleSearch()} className="search-button">
+            <button onClick={() => handleSearch()} className="search-button" aria-label="Search">
               <i className="fas fa-search"></i>
             </button>
           </div>
 
           {suggestions.length > 0 && (
-            <ul className="suggestions-list">
+            <ul 
+              className="suggestions-list"
+              id="suggestions-list"
+              role="listbox"
+              aria-live="polite"
+            >
               {suggestions.map((suggestion, index) => (
-                <li key={index} className="suggestion-item" onClick={() => handleCitySelect(suggestion)}>
+                <li 
+                  key={index}
+                  className={`suggestion-item ${index === highlightedIndex ? 'highlighted' : ''}`}
+                  onClick={() => handleCitySelect(suggestion)}
+                  role="option"
+                  aria-selected={index === highlightedIndex}
+                >
                   {suggestion.name}, {suggestion.country}
                 </li>
               ))}
@@ -242,10 +274,10 @@ const App = () => {
         </div>
       </div>
 
-      {error && <p className="error-message">{error}</p>}
+      {error && <p className="error-message" role="alert">{error}</p>}
 
       {loading ? (
-        <div className="weather-card loading">
+        <div className="weather-card loading" aria-live="polite" aria-busy="true">
           <i className="fas fa-spinner fa-spin"></i>
         </div>
       ) : (

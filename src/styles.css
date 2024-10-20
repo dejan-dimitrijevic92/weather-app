@@ -91,7 +91,8 @@ body {
   cursor: pointer;
 }
 
-.suggestion-item:hover {
+.suggestion-item:hover,
+.suggestion-item.highlighted{
   background-color: rgba(200, 200, 200, 0.5);
 }
 
