@@ -174,7 +174,7 @@ const App = () => {
     try {
       const data = await fetchWeather(searchCityValue);
       setWeatherData(data);
-      updateRecentSearches(searchCityValue, data);
+      updateRecentSearches(`${data.name}, ${data.sys.country}`, data);
       updateBackground(data);
     } catch (err) {
       setError('City not found or API error.');
