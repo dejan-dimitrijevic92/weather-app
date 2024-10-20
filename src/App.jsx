@@ -14,15 +14,19 @@ const App = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [recentSearches, setRecentSearches] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const wrapperRef = useRef(null);
 
   const fetchWeatherByLocation = async (lat, lon) => {
     try {
+      setLoading(true);
       const data = await fetchWeatherByCoordinates(lat, lon);
       setWeatherData(data);
       updateBackground(data);
     } catch (err) {
       setError('Unable to fetch weather for your location.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,11 +75,14 @@ const App = () => {
 
   const fetchWeatherFallback = async () => {
     try {
+      setLoading(true);
       const data = await fetchWeather('New York');
       setWeatherData(data);
       updateBackground(data);
     } catch (err) {
       setError('Unable to fetch weather data for the fallback city.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -149,6 +156,7 @@ const App = () => {
 
   const handleCitySelect = async (suggestion) => {
     try {
+      setLoading(true); 
       const data = await fetchWeatherByCoordinates(suggestion.lat, suggestion.lon);
       setWeatherData(data);
       setCity(`${suggestion.name}, ${suggestion.country}`);
@@ -157,6 +165,8 @@ const App = () => {
       updateBackground(data);
     } catch (err) {
       setError('Unable to fetch weather for the selected city.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -172,12 +182,15 @@ const App = () => {
     }
 
     try {
+      setLoading(true);
       const data = await fetchWeather(searchCityValue);
       setWeatherData(data);
       updateRecentSearches(`${data.name}, ${data.sys.country}`, data);
       updateBackground(data);
     } catch (err) {
       setError('City not found or API error.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -229,10 +242,15 @@ const App = () => {
         </div>
       </div>
 
-
       {error && <p className="error-message">{error}</p>}
 
-      {weatherData && <CurrentWeather weatherData={weatherData} />}
+      {loading ? (
+        <div className="weather-card loading">
+          <i className="fas fa-spinner fa-spin"></i>
+        </div>
+      ) : (
+        weatherData && <CurrentWeather weatherData={weatherData} />
+      )}
 
       <RecentSearches recentSearches={recentSearches} handleSelect={handleRecentItemSelect} />
     </div>

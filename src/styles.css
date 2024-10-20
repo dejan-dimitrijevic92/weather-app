@@ -107,6 +107,15 @@ body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   margin-top: 40px;
   width: 200px;
+  height: 280px;
+}
+
+.weather-card.loading {
+  justify-content: center;
+}
+
+.weather-card.loading i {
+  font-size: 3rem
 }
 
 .weather-icon {
